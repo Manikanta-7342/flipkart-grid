@@ -13,6 +13,7 @@ with open('links.json', 'r') as links_file:
 # Download images and save them in the 'data' folder
 for index, image_link in enumerate(image_links, start=1):
     try:
+        image_link = image_link[:-5]
         response = requests.get(image_link)
         if response.status_code == 200:
             image_extension = image_link.split('.')[-1]
