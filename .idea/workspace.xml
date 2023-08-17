@@ -2,10 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ff107550-41ac-49bb-b85b-c2f43034051b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.env" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bard_api.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/htmlTemplates.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tools.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bard.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bard_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/bard_api.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlTemplates.py" beforeDir="false" afterPath="$PROJECT_DIR$/htmlTemplates.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -40,6 +42,11 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;advanced.settings&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Hackathon\Flipkart_grid" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="Flipkart_grid" />
