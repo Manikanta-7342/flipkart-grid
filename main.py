@@ -1,55 +1,69 @@
-from tempfile import NamedTemporaryFile
-import streamlit as st
 from dotenv import load_dotenv
-import requests
-import io
-from setup import API_URL,API_TOKEN
+import streamlit as st
+from langchain.agents import initialize_agent
+from langchain.chat_models import ChatOpenAI
+from langchain.chains.conversation.memory import ConversationBufferWindowMemory
 from PIL import Image
-from htmlTemplates import css, bot_template, user_template
+import io
+from tools import ImageGeneratorTool, WebSrappingTool
 
-st.set_page_config(page_title="Chat to generate images ",
-                       page_icon=":chatbot:")
-st.write(css, unsafe_allow_html=True)
+load_dotenv()
 
-if "conversation" not in st.session_state:
-    st.session_state.conversation = {}
-if "chat_history" not in st.session_state:
-    st.session_state.chat_history = []
-def handle_userinput(user_question):
-    st.session_state.conversation = {'question': user_question}
-    st.session_state.chat_history = response['chat_history']
+i = 1
+##############################
+### initialize agent #########
+##############################
+tools = [ImageGeneratorTool(), WebSrappingTool()]
 
-    for i, message in enumerate(st.session_state.chat_history):
-        if i % 2 == 0:
-            st.write(user_template.replace(
-                "{{MSG}}", message.content), unsafe_allow_html=True)
-        else:
-            st.write(bot_template.replace(
-                "{{MSG}}", message.content), unsafe_allow_html=True)
+conversational_memory = ConversationBufferWindowMemory(
+    memory_key='chat_history',
+    k=5,
+    return_messages=True
+)
 
-def query(payload):
-    headers = {"Authorization": f"Bearer {API_TOKEN}"}
-    response = requests.post(API_URL, headers=headers, json=payload)
-    return response.content
+llm = ChatOpenAI(
+    temperature=0,
+    model_name="gpt-3.5-turbo"
+)
+
+agent = initialize_agent(
+    agent="chat-conversational-react-description",
+    tools=tools,
+    llm=llm,
+    max_iterations=5,
+    verbose=True,
+    memory=conversational_memory,
+    early_stopping_method='generate'
+)
+def on_btn_click():
+    del st.session_state.past[:]
+    del st.session_state.generated[:]
 
 # set title
-st.title('Ask a question to generate an image')
+st.title('Project: GenTech')
 
-st.header("Chat with Bot to Generate Images :hugging_face:")
+# set header
+st.header("Interact with ChatBot to Generate Images :hugging_face:")
 
-user_question = st.text_input("Give a prompt to generate image:")
+def on_input_change():
+    user_input = st.session_state.user_input
+    st.session_state.past.append(user_input)
 
-if user_question:
-    #handle_userinput(user_question)
-    st.write(user_template.replace(
-        "{{MSG}}", user_question), unsafe_allow_html=True)
-    qs = st.session_state.conversation['question'] = user_question
+    ##############################
+    ### compute agent response ###
+    ##############################
+
+    # write agent response
     with st.spinner(text="In progress..."):
-        image_bytes = query({
-            "inputs": user_question,  # Replace with your fashion-related text input
-        })
+        generated_image = agent.run('this is the user prompt: {}'.format(user_question))
         # Open and display the generated image
-        generated_image = Image.open(io.BytesIO(image_bytes))
-        st.session_state.chat_history.append([qs,generated_image])
-        st.image(generated_image)
+        generated_image = Image.open(io.BytesIO(generated_image))
+        temp = globals()["i"]
+        generated_image.save("./generatedData/response{}.png".format(temp))
+        img_path = r"http://localhost:8080/response{}.png".format(temp)  #python -m http.server 8080
+        globals()["i"] += 1
+
+with st.container():
+    st.text_input("User Input:", on_change=on_input_change, key="user_input")
+
 
