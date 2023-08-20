@@ -7,6 +7,10 @@ import requests
 
 i = 1
 
+st.title('Project: GenTech')
+
+st.header("Interact with ChatBot to Generate Images :hugging_face:")
+
 def query(payload):
     headers = {"Authorization": f"Bearer {API_TOKEN}"}
     response = requests.post(API_URL, headers=headers, json=payload)
@@ -33,13 +37,12 @@ def on_input_change():
 
     # Store the image response in the generated list
     st.session_state.generated.append({'type': 'normal', 'data': f'<img width="100%" height="200" src="{img_path}"/>'})
+    print(st.session_state.generated)
 
 
 def on_btn_click():
     del st.session_state.past[:]
     del st.session_state.generated[:]
-
-img_path = "https://www.groundzeroweb.com/wp-content/uploads/2017/05/Funny-Cat-Memes-11.jpg"
 
 
 st.session_state.setdefault(
@@ -50,8 +53,6 @@ st.session_state.setdefault(
     'generated',
     []
 )
-
-st.title("Chat placeholder")
 
 chat_placeholder = st.empty()
 
